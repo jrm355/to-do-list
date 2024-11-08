@@ -2,11 +2,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,6 +16,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -28,6 +27,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f4e2d1;
 }
 
 h1 {
@@ -46,11 +46,12 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
+
+button:focus, button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
@@ -66,6 +67,8 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Modal styling */
 .modal {
   position: fixed;
   top: 50%;
@@ -82,11 +85,13 @@ button:focus-visible {
 
 .modal h2 {
   text-align: center;
+  color: black;
 }
 
 .modal ul {
   list-style-type: none;
   padding: 0;
+  align-items: center;
 }
 
 .modal li {
@@ -98,4 +103,17 @@ button:focus-visible {
   margin: 10px auto;
   padding: 8px 16px;
   font-size: 1em;
+}
+
+/* Dropdown styling */
+select {
+  color: #000;
+  background-color: #fff;
+  padding: 5px;
+  font-size: 14px;
+}
+
+select option {
+  color: #000;
+  background-color: #fff;
 }

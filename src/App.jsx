@@ -105,11 +105,14 @@ function App() {
       </div>
 
       <div className="list-header">
-        <span>Task</span>
-        <span>Urgency</span>
-        <span>Type</span>
-        <span>Completed</span>
+  <div className="header-task">Task</div>
+  <div className="header-urgency">Urgency</div>
+  <div className="header-type">Type</div>
+  <div className="header-completed">Completed</div>
       </div>
+      
+      
+      
       
       <ul>
         {todos.map((todo) => (
