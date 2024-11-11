@@ -1,15 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import './app.css';
 import DataEntryModal from './DataEntryModal';
 
+const initialState = [];
+
+function todosReducer(state, action) {
+  switch (action.type) {
+    case 'SET_TASKS':
+      return action.payload.map(task => ({ ...task, id: Date.now() + Math.random() }));
+    case 'ADD_TODO':
+      return [{ ...action.payload, completed: false, id: Date.now() }, ...state];
+    case 'EDIT_TODO':
+      return state.map(todo =>
+        todo.id === action.payload.id ? { ...todo, ...action.payload.data } : todo
+      );
+    case 'DELETE_TODO':
+      return state.filter(todo => todo.id !== action.payload);
+    case 'TOGGLE_COMPLETE':
+      return state.map(todo =>
+        todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+      );
+    case 'SORT_PRIORITY':
+      return [...state].sort((a, b) => {
+        const priorities = { today: 1, 'this week': 2, 'this month': 3 };
+        return priorities[a.priority] - priorities[b.priority];
+      });
+    case 'SORT_TYPE':
+      return [...state].sort((a, b) => a.type.localeCompare(b.type));
+    default:
+      return state;
+  }
+}
+
 function App() {
   const [showModal, setShowModal] = useState(true);
-  const [todos, setTodos] = useState([]);
+  const [todos, dispatch] = useReducer(todosReducer, initialState);
   const [formData, setFormData] = useState({ text: '', priority: 'today', type: 'general' });
   const [currentlyEditingId, setCurrentlyEditingId] = useState(null);
 
   const handleSaveTasks = (tasks) => {
-    setTodos(tasks.map(task => ({ ...task, id: Date.now() + Math.random() })));
+    dispatch({ type: 'SET_TASKS', payload: tasks });
     setShowModal(false);
   };
 
@@ -21,15 +51,13 @@ function App() {
     if (formData.text.trim() === '') return;
 
     if (currentlyEditingId !== null) {
-      setTodos(todos.map(todo =>
-        todo.id === currentlyEditingId ? { ...todo, ...formData } : todo
-      ));
+      dispatch({
+        type: 'EDIT_TODO',
+        payload: { id: currentlyEditingId, data: formData }
+      });
       setCurrentlyEditingId(null);
     } else {
-      setTodos([
-        ...todos,
-        { ...formData, completed: false, id: Date.now() }
-      ]);
+      dispatch({ type: 'ADD_TODO', payload: formData });
     }
 
     setFormData({ text: '', priority: 'today', type: 'general' });
@@ -41,13 +69,11 @@ function App() {
   };
 
   const toggleComplete = (id) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    dispatch({ type: 'TOGGLE_COMPLETE', payload: id });
   };
 
   const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    dispatch({ type: 'DELETE_TODO', payload: id });
   };
 
   const editTodo = (id) => {
@@ -57,14 +83,11 @@ function App() {
   };
 
   const sortTodos = (criteria) => {
-    let sortedTodos = [...todos];
     if (criteria === 'priority') {
-      const priorities = { today: 1, 'this week': 2, 'this month': 3 };
-      sortedTodos.sort((a, b) => priorities[a.priority] - priorities[b.priority]);
+      dispatch({ type: 'SORT_PRIORITY' });
     } else if (criteria === 'type') {
-      sortedTodos.sort((a, b) => a.type.localeCompare(b.type));
+      dispatch({ type: 'SORT_TYPE' });
     }
-    setTodos(sortedTodos);
   };
 
   return (
@@ -105,15 +128,12 @@ function App() {
       </div>
 
       <div className="list-header">
-  <div className="header-task">Task</div>
-  <div className="header-urgency">Urgency</div>
-  <div className="header-type">Type</div>
-  <div className="header-completed">Completed</div>
+        <div className="header-task">Task</div>
+        <div className="header-urgency">Urgency</div>
+        <div className="header-type">Type</div>
+        <div className="header-completed">Completed</div>
       </div>
-      
-      
-      
-      
+
       <ul>
         {todos.map((todo) => (
           <li key={todo.id} className="task-item">
