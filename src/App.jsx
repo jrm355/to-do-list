@@ -92,71 +92,79 @@ function App() {
 
   return (
     <div className="todo-app">
-      {showModal && <DataEntryModal onClose={() => setShowModal(false)} onSave={handleSaveTasks} />}
-
-      <h1>To-Do List</h1>
-
-      <div className="input-section">
-        <input
-          type="text"
-          placeholder="Add or edit a task..."
-          name="text"
-          value={formData.text}
-          onChange={handleChange}
-        />
-        <select name="priority" value={formData.priority} onChange={handleChange}>
-          <option value="today">Today</option>
-          <option value="this week">This Week</option>
-          <option value="this month">This Month</option>
-        </select>
-        <select name="type" value={formData.type} onChange={handleChange}>
-          <option value="general">General</option>
-          <option value="animal">Animal</option>
-          <option value="baby">Baby</option>
-          <option value="housework">Housework</option>
-          <option value="work">Work</option>
-          <option value="personal">Personal</option>
-        </select>
-        <button onClick={addOrEditTodo}>
-          {currentlyEditingId ? "Save Task" : "Add Task"}
-        </button>
-      </div>
-
-      <div className="sort-section">
-        <button onClick={() => sortTodos('priority')}>Sort by Priority</button>
-        <button onClick={() => sortTodos('type')}>Sort by Type</button>
-      </div>
-
-      <div className="list-header">
-        <div className="header-task">Task</div>
-        <div className="header-urgency">Urgency</div>
-        <div className="header-type">Type</div>
-        <div className="header-completed">Completed</div>
-      </div>
-
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id} className="task-item">
-            <span>{todo.text}</span>
-            <span>{todo.priority}</span>
-            <span>{todo.type}</span>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleComplete(todo.id)}
-            />
-            <button onClick={() => editTodo(todo.id)}>Edit</button>
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className={todo.completed ? '' : 'disabled-button'}
-              disabled={!todo.completed}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+    {showModal && <DataEntryModal onClose={() => setShowModal(false)} onSave={handleSaveTasks} />}
+  
+    <h1>To-Do List</h1>
+  
+    <div className="input-section">
+      <input
+        type="text"
+        placeholder="Add or edit a task..."
+        name="text"
+        value={formData.text}
+        onChange={handleChange}
+      />
+      <select name="priority" value={formData.priority} onChange={handleChange}>
+        <option value="today">Today</option>
+        <option value="this week">This Week</option>
+        <option value="this month">This Month</option>
+      </select>
+      <select name="type" value={formData.type} onChange={handleChange}>
+        <option value="general">General</option>
+        <option value="animal">Animal</option>
+        <option value="baby">Baby</option>
+        <option value="housework">Housework</option>
+        <option value="work">Work</option>
+        <option value="personal">Personal</option>
+      </select>
+      <button onClick={addOrEditTodo}>
+        {currentlyEditingId ? "Save Task" : "Add Task"}
+      </button>
     </div>
+  
+    <div className="sort-section">
+      <button onClick={() => sortTodos('priority')}>Sort by Priority</button>
+      <button onClick={() => sortTodos('type')}>Sort by Type</button>
+    </div>
+  
+    <table className="todo-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Urgency</th>
+          <th>Type</th>
+          <th>Completed</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((todo) => (
+          <tr key={todo.id}>
+            <td>{todo.text}</td>
+            <td>{todo.priority}</td>
+            <td>{todo.type}</td>
+            <td>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => toggleComplete(todo.id)}
+              />
+            </td>
+            <td>
+              <button onClick={() => editTodo(todo.id)}>Edit</button>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className={todo.completed ? '' : 'disabled-button'}
+                disabled={!todo.completed}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
   );
 }
 
